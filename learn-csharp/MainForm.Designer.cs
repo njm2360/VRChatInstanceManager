@@ -63,6 +63,7 @@
             this.webSocketLog.Location = new System.Drawing.Point(379, 401);
             this.webSocketLog.Multiline = true;
             this.webSocketLog.Name = "webSocketLog";
+            this.webSocketLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.webSocketLog.Size = new System.Drawing.Size(409, 152);
             this.webSocketLog.TabIndex = 3;
             // 
@@ -106,6 +107,7 @@
             this.instanceManagerLog.Location = new System.Drawing.Point(379, 42);
             this.instanceManagerLog.Multiline = true;
             this.instanceManagerLog.Name = "instanceManagerLog";
+            this.instanceManagerLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.instanceManagerLog.Size = new System.Drawing.Size(409, 323);
             this.instanceManagerLog.TabIndex = 8;
             // 

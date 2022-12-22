@@ -84,7 +84,7 @@ namespace learn_csharp
 
                 if (notify.type == "requestInvite")
                 {
-                    instanceManagerLog.AppendText($"Request Invite by {notify.senderUsername}\r");
+                    instanceManagerLog.AppendText($"Request Invite by {notify.senderUsername}\r\n");
 
                     if (staffOnlyMode.Checked == true)
                     {
@@ -93,7 +93,7 @@ namespace learn_csharp
                         {
                             if (await sendInvite(notify.senderUserId) == 200)
                             {
-                                instanceManagerLog.AppendText($"Send Invite to {notify.senderUsername}\r");
+                                instanceManagerLog.AppendText($"Send Invite to {notify.senderUsername}\r\n");
                                 inviteWaitList.Items.Add(notify.senderUserId);
                             }
                         }
@@ -109,7 +109,7 @@ namespace learn_csharp
                                 if (await sendInvite(notify.senderUserId) == 200)
                                 {
                                     guestCount++;
-                                    instanceManagerLog.AppendText($"Send Invite to {notify.senderUsername}\r");
+                                    instanceManagerLog.AppendText($"Send Invite to {notify.senderUsername}\r\n");
                                     inviteWaitList.Items.Add(notify.senderUserId);
                                 }
                             }
@@ -119,7 +119,7 @@ namespace learn_csharp
                             //空き待ちリストに追加(重複防止)
                             if (!instaceFullWaitList.Items.Contains(notify.senderUserId))
                             {
-                                instanceManagerLog.AppendText($"Add waitlist to {notify.senderUsername}\r");
+                                instanceManagerLog.AppendText($"Add waitlist to {notify.senderUsername}\r\n");
                                 instaceFullWaitList.Items.Add(notify.senderUserId);
                             }
                         }
@@ -130,7 +130,6 @@ namespace learn_csharp
             else if (res.type == "friend-location")
             {
                 //場所移動
-                MessageBox.Show(res.content);
                 LocationContent? location = JsonSerializer.Deserialize<LocationContent>(res.content);
                 if (location == null) return;
 
@@ -139,14 +138,24 @@ namespace learn_csharp
                     if (location.travelingToLocation == targetInstanceId.Text)
                     {
                         //入場確定
-                        instanceManagerLog.AppendText($"{location.user.displayName} is Joining\r");
+                        instanceManagerLog.AppendText($"{location.user.displayName} is Joining\r\n");
                         inviteWaitList.Items.Remove(location.userId);
                         inWorldList.Items.Add(location.userId);
                     }
                     else if (inWorldList.Items.Contains(location.userId))
                     {
                         //退場確定
-                        instanceManagerLog.AppendText($"{location.user.displayName} is Leaved by moved\r");
+                        instanceManagerLog.AppendText($"{location.user.displayName} is Leaved by moved\r\n");
+                        inWorldList.Items.Remove(location.userId);
+                        guestCount--;
+                        checkInstanceBrank();
+                    }
+                }else if(location.location == "private")
+                {
+                    if (inWorldList.Items.Contains(location.userId))
+                    {
+                        //プラベに移動した場合の退場処理
+                        instanceManagerLog.AppendText($"{location.user.displayName} is Leaved by moved\r\n");
                         inWorldList.Items.Remove(location.userId);
                         guestCount--;
                         checkInstanceBrank();
@@ -163,7 +172,7 @@ namespace learn_csharp
                     if (inWorldList.Items.Contains(offlineRes.userId))
                     {
                         //クライアント断で退場
-                        instanceManagerLog.AppendText($"{offlineRes.userId} is Leaved by Client killed\r");
+                        instanceManagerLog.AppendText($"{offlineRes.userId} is Leaved by Client killed\r\n");
                         inWorldList.Items.Remove(offlineRes.userId);
                         guestCount--;
                         checkInstanceBrank();
@@ -188,7 +197,7 @@ namespace learn_csharp
                 {
                     if (await sendInvite(target) == 200)
                     {
-                        instanceManagerLog.AppendText($"Send Invite to {target} (wait list)\r");
+                        instanceManagerLog.AppendText($"Send Invite to {target} (wait list)\r\n");
                         inviteWaitList.Items.Add(target);
                         guestCount++;
                     }
@@ -265,14 +274,6 @@ namespace learn_csharp
         public object previewYoutubeId { get; set; }
 
         public int favorites { get; set; }
-
-        public DateTime created_at { get; set; }
-
-        public DateTime updated_at { get; set; }
-
-        public DateTime publicationDate { get; set; }
-
-        public DateTime labsPublicationDate { get; set; }
 
         public int visits { get; set; }
 
